@@ -98,7 +98,19 @@ const loginUser = asyncHandler(async (req, res) => {
     )
 });
 
+const getCurrentUser = asyncHandler(async (req, res) => {
+
+  return res.status(200).json(
+    new ApiResponse(
+      200,
+      req.user,
+      "User data fetched successfully"
+    )
+  );
+});
+
 module.exports = {
   registerUser,
-  loginUser
+  loginUser,
+  getCurrentUser
 }
