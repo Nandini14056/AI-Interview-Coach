@@ -7,6 +7,12 @@ const aiQuestionsSchema = z.array(
   })
 );
 
+const aiEvaluationSchema = z.object({
+  score: z.number().min(0).max(10),
+  feedback: z.string()
+});
+
 module.exports = {
-  aiQuestionsSchema
+  aiQuestionsSchema,
+  aiEvaluationSchema
 }
