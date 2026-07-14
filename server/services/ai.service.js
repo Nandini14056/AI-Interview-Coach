@@ -2,7 +2,7 @@ const Groq = require("groq-sdk");
 require("dotenv").config();
 const parseAIResponse = require("../utils/parseAIResponse");
 const ApiError = require("../utils/ApiError");
-const {aiEvaluationSchema} = require("../validators/ai.validator");
+const { aiQuestionsSchema, aiEvaluationSchema, aiOverallFeedbackSchema } = require("../validators/ai.validator");
 
 const groq = new Groq({
   apiKey: process.env.GROQ_API_KEY,
@@ -64,13 +64,18 @@ const generateInterviewQuestions = async ({
       ]
     })
 
-    const questions = JSON.parse(
+    const questions = parseAIResponse(
       response.choices[0].message.content
     );
 
+    aiQuestionsSchema.parse(questions);
+
     return questions;
   } catch (error) {
-    return error.message;
+    throw new ApiError(
+      500,
+      `Failed to generate interview questions: ${error.message}`
+    );
   }
 };
 
@@ -131,7 +136,7 @@ const evaluateAnswer = async ({
           content: prompt
         }
       ]
-    })
+    });
 
     const evaluation = parseAIResponse(
       response.choices[0].message.content
@@ -139,17 +144,94 @@ const evaluateAnswer = async ({
 
     aiEvaluationSchema.parse(evaluation);
 
-    return evaluation ;
+    return evaluation;
 
   } catch (error) {
     throw new ApiError(
-        500,
-        `Failed to evaluate answer: ${error.message}`
+      500,
+      `Failed to evaluate answer: ${error.message}`
+    );
+  }
+}
+
+const generateOverallFeedback = async ({ questions }) => {
+  try {
+
+    const interviewSummary = questions
+      .map(
+        (q, index) => `
+        Question ${index + 1}
+        Question:
+        ${q.question}
+        Expected Answer:
+        ${q.expectedAnswer}
+        Candidate Answer:
+        ${q.userAnswer}
+        Score:
+        ${q.score}
+        Feedback:
+        ${q.feedback}`).join("\n");
+
+    const prompt = `
+      You are a Senior Technical Interviewer.
+
+      Analyze the following completed interview.
+
+      ${interviewSummary}
+
+      Instructions:
+
+    - Calculate an overall score from 0–100.
+    - Consider the scores of each question.
+    - Identify recurring weak topics.
+    - Mention the candidate's strengths.
+    - Mention the candidate's weaknesses.
+    - Be encouraging but honest.
+    - Return ONLY valid JSON.
+    - Do not use markdown.
+    - Do not wrap the JSON in triple backticks.
+    - Do not include introductory or concluding text.
+
+      Output:
+
+      {
+        "overallScore": 0,
+        "overallFeedback": "",
+        "weakTopics": []
+      }`;
+
+    const response = await groq.chat.completions.create({
+      model: "llama-3.3-70b-versatile",
+      messages: [
+        {
+          role: "system",
+          content:
+            "You are an experienced Senior Technical Interviewer. Always evaluate answers fairly and return only valid JSON."
+        }, {
+          role: "user",
+          content: prompt
+        }
+      ]
+    });
+
+    const overallFeedback = parseAIResponse(
+      response.choices[0].message.content
+    );
+
+    aiOverallFeedbackSchema.parse(overallFeedback);
+
+    return overallFeedback;
+
+  } catch (error) {
+    throw new ApiError(
+      500,
+      `Failed to evaluate answer: ${error.message}`
     );
   }
 }
 
 module.exports = {
   generateInterviewQuestions,
-  evaluateAnswer
+  evaluateAnswer,
+  generateOverallFeedback
 };
