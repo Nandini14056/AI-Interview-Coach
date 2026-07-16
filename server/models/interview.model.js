@@ -3,8 +3,7 @@ const mongoose = require("mongoose");
 const interviewSchema = new mongoose.Schema(
   {
     title: {
-      type: String,
-      required: true
+      type: String
     },
     user: {
       type: mongoose.Schema.Types.ObjectId,

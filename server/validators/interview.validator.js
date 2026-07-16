@@ -19,7 +19,12 @@ const interviewSchema = z.object({
   resumeUrl: z
     .string()
     .trim()
-    .optional()
+    .optional(),
+  numberOfQuestions: z
+    .number()
+    .int()
+    .min(1)
+    .max(20),
 })
   .refine((data) => {
     if (data.interviewType === "Resume") {

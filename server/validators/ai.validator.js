@@ -15,7 +15,7 @@ const aiEvaluationSchema = z.object({
 const aiOverallFeedbackSchema = z.object({
   overallScore: z.number().min(0).max(100),
   overallFeedback: z.string(),
-  weaktopics: z.array(z.string())
+  weakTopics: z.array(z.string())
 });
 
 module.exports = {

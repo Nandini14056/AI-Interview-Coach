@@ -3,8 +3,9 @@ const ApiError = require("../utils/ApiError");
 const ApiResponse = require("../utils/ApiResponse");
 const Interview = require("../models/interview.model");
 const { interviewSchema } = require("../validators/interview.validator");
-const { generateInterviewQuestions, evaluateAnswer } = require("../services/ai.service");
+const { generateInterviewQuestions, evaluateAnswer, generateOverallFeedback } = require("../services/ai.service");
 const Question = require("../models/question.model");
+const mongoose = require("mongoose");
 
 // Interview Creation
 const startInterview = asyncHandler(async (req, res) => {
