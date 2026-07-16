@@ -5,6 +5,7 @@ require("dotenv").config();
 
 const connectDB = require("./config/db");
 const authRouter = require("./routes/auth.routes");
+const interviewRouter = require("./routes/interview.routes");
 const errorHandler = require("./middleware/error.middleware");
 
 connectDB();
@@ -30,6 +31,7 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api/auth", authRouter);
+app.use("/api/interviews", interviewRouter);
 
 app.use(errorHandler);
 
