@@ -10,14 +10,14 @@ import Dashboard from "./pages/Dashboard";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 
-const ProtectedRoute = ({ childern }) => {
+const ProtectedRoute = ({ children }) => {
   const token = localStorage.getItem("token");
 
   if (!token) {
     return <Navigate to="/login" replace />;
   }
 
-  return childern;
+  return children;
 };
 
 const AuthenticatedLayout = () => {

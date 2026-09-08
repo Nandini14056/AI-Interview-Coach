@@ -11,6 +11,7 @@ const Dashboard = () => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
+
     const fetchInterviews = async () => {
       try {
         const data = await getRecentInterviews();
