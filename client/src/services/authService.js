@@ -6,10 +6,10 @@ export const loginUser = async (email, password) => {
 
     const token = response.data?.data?.accessToken;
 
-    if(token){
-      localStorage.setItem('token',token);
+    if (token) {
+      localStorage.setItem('token', token);
     }
-    
+
     return response.data;
   } catch (error) {
     console.log("Login Error: ", error);
