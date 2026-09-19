@@ -550,12 +550,12 @@ export default function Interview() {
               <button
                 key={question._id}
                 type="button"
-                className={`q-nav ${isCurrent ? "active" : ""}`}
+                className={`q-btn ${isCurrent ? "active" : ""}`}
                 onClick={() => selectQuestion(questionIndex)}
               >
-                <span>{questionIndex + 1}</span>
+                <span className="q-nav">{questionIndex + 1}</span>
 
-                <span>
+                <span className="nav-question">
                   {isCurrent
                     ? "Current Question"
                     : question.question.length > 27
