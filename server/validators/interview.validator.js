@@ -13,7 +13,7 @@ const interviewSchema = z.object({
         .trim()
         .min(1, "Tech stack cannot contain empty values")),
   interviewType:
-    z.enum(["Role", "Resume", "Mixed"]),
+    z.enum(["Technical", "HR", "Mixed"]),
   mode:
     z.enum(["Text", "Voice", "Video"]),
   resumeUrl: z
