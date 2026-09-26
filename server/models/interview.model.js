@@ -29,8 +29,8 @@ const interviewSchema = new mongoose.Schema(
       type: String,
       required: true,
       enum: [
-        "Role",
-        "Resume",
+        "Technical",
+        "HR",
         "Mixed"
       ]
     },

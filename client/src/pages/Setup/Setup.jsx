@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { BriefcaseBusiness, FileText, Sparkles, X } from "lucide-react";
+import { BriefcaseBusiness, Sparkles, X } from "lucide-react";
 import { startInterview } from "@/services/interview.service";
 import { getApiError } from "@/components/ui/Toast";
 
@@ -111,7 +111,7 @@ export default function Setup() {
           <div className="range-row">
             <input
               type="range"
-              min="5"
+              min="1"
               max="20"
               value={form.numberOfQuestions}
               onChange={(e) =>
@@ -141,52 +141,33 @@ export default function Setup() {
           <div className="option-grid three">
             {[
               [
-                "Role",
-                "Role-based",
+                "Technical",
                 "Focus strictly on standard questions for this position.",
               ],
               [
-                "Resume",
-                "Resume-based",
+                "HR",
                 "Deep dive into your past experience and projects.",
               ],
               [
                 "Mixed",
-                "Mixed",
                 "A balanced combination of technical and behavioral.",
               ],
-            ].map(([v, t, d]) => (
+            ].map(([v, d]) => (
               <button
                 type="button"
                 key={v}
                 className={`focus-option ${form.interviewType === v ? "selected" : ""}`}
                 onClick={() => setForm({ ...form, interviewType: v })}
               >
-                <b>{t}</b>
+                <b>{v}</b>
                 <small>{d}</small>
               </button>
             ))}
           </div>
         </label>
-        {form.interviewType !== "Role" && (
-          <label>
-            <span>Resume text (optional but recommended)</span>
-            <div className="input-wrap textarea-wrap">
-              <FileText size={15} />
-              <textarea
-                rows="5"
-                value={form.resumeText}
-                onChange={(e) =>
-                  setForm({ ...form, resumeText: e.target.value })
-                }
-                placeholder="Paste your resume text here so the AI can ask project and experience questions…"
-              />
-            </div>
-          </label>
-        )}
         <label>
           Interview Mode
-          <div className="mode-row">
+        {/* <div className="mode-row">
             {["Text", "Voice", "Video"].map((x) => (
               <button
                 type="button"
@@ -197,6 +178,15 @@ export default function Setup() {
                 {x}
               </button>
             ))}
+          </div> */}
+          <div className="mode-row">
+            <button
+                type="button"
+                className={`mode-pill ${form.mode === "Text" ? "selected" : ""}`}
+                onClick={() => setForm({ ...form, mode:"Text" })}
+              >
+                Text
+              </button>
           </div>
         </label>
         {error && <div className="error-box">{error}</div>}
